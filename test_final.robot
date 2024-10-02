@@ -4,48 +4,37 @@ Library           RequestsLibrary
 *** Keywords ***
 Get API_APP JSON
     [Arguments]    ${num}
-    ${resp}=     GET    http://127.0.0.1:5000/is1honor/${num}
+    ${resp}=     GET    http://127.0.0.1:5000/mul5/${num}
     Should Be Equal    ${resp.status_code}    ${200}
     RETURN    ${resp.json()}
 
-Convert String To Boolean
-    [Arguments]    ${value}
-    ${value} =    Convert To String    ${value}
-    ${boolean_value}=    Run Keyword If    '${value}' == 'True'    Set Variable    True
-    ...    ELSE    Set Variable    False
-    [Return]    ${boolean_value}
-
 *** Test Cases ***
-Test API_APP Numbers 3dot6 (Before Using Keywords)
-    ${resp}=     GET    http://127.0.0.1:5000/is1honor/3.6
+Test API_APP Numbers 1 (Before Using Keywords)
+    ${resp}=     GET    http://127.0.0.1:5000/mul5/1
     Should Be Equal    ${resp.status_code}    ${200}
     ${json_resp}=    Set Variable  ${resp.json()}
-    ${is1honor}=    Convert String To Boolean    ${json_resp['is1honor']}
-    Should Be Equal    ${is1honor}    True
+    Should Be Equal    ${json_resp['result']}    5
 
-Test API_APP Numbers 2dot0 (Before Using Keywords)
-    ${resp}=     GET    http://127.0.0.1:5000/is1honor/2.0
+Test API_APP Numbers neg10 (Before Using Keywords)
+    ${resp}=     GET    http://127.0.0.1:5000/mul5/-10
     Should Be Equal    ${resp.status_code}    ${200}
     ${json_resp}=    Set Variable  ${resp.json()}
-    ${is1honor}=    Convert String To Boolean    ${json_resp['is1honor']}
-    Should Be Equal    ${is1honor}    False
+    Should Be Equal    ${json_resp['result']}    -50
 
-Test API_APP Numbers 5dot1 (Before Using Keywords)
-    ${resp}=     GET    http://127.0.0.1:5000/is1honor/5.1
+Test API_APP Numbers 1dot5 (Before Using Keywords)
+    ${resp}=     GET    http://127.0.0.1:5000/mul5/1.5
     Should Be Equal    ${resp.status_code}    ${200}
     ${json_resp}=    Set Variable  ${resp.json()}
-    Should Be Equal As Strings    ${json_resp['ERROR']}    Invalid input
+    Should Be Equal    ${json_resp['result']}    7.5
 
-Test API_APP Numbers 3dot6
-    ${json_resp}=    Get API_APP JSON    ${3.6}
-    ${is1honor}=    Convert String To Boolean    ${json_resp['is1honor']}
-    Should Be Equal    ${is1honor}    True
+Test API_APP Numbers 1
+    ${json_resp}=    Get API_APP JSON    ${1}
+    Should Be Equal    ${json_resp['result']}    5
 
-Test API_APP Numbers 2dot0
-    ${json_resp}=    Get API_APP JSON    ${2.0}
-    ${is1honor}=    Convert String To Boolean    ${json_resp['is1honor']}
-    Should Be Equal    ${is1honor}    False
+Test API_APP Numbers neg10
+    ${json_resp}=    Get API_APP JSON    ${-10}
+    Should Be Equal    ${json_resp['result']}    -50
 
-Test API_APP Numbers 5dot1
-    ${json_resp}=    Get API_APP JSON    ${5.1}
-    Should Be Equal As Strings    ${json_resp['ERROR']}    Invalid input
+Test API_APP Numbers 1dot5
+    ${json_resp}=    Get API_APP JSON    ${1.5}
+    Should Be Equal    ${json_resp['result']}    7.5
